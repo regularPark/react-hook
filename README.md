@@ -1,2 +1,2 @@
-# react-hook
+# practice-react-hooks
 Created with CodeSandbox
