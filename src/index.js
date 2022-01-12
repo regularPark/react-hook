@@ -1,17 +1,28 @@
-import { useState, useEffect } from "react";
-import ReactDOM from "react-dom";
+import { useState, useEffect, useRef } from "react";
+import ReactDOM, { unstable_renderSubtreeIntoContainer } from "react-dom";
+
+const useBeforeLeave = (onBefore) => {
+  if (typeof onBefore !== "function") {
+    return;
+  }
+  const handle = (event) => {
+    const { clientY } = event;
+    if (clientY <= 0) {
+      onBefore();
+    }
+  };
+  useEffect(() => {
+    document.addEventListener("mouseleave", handle);
+    return () => document.removeEventListener("mouseleave", handle);
+  }, []);
+};
 
 const App = () => {
-  const sayHello = () => console.log("hello");
-  const [number, setNumber] = useState(0);
-  useEffect(sayHello, [number]);
-
-  const [aNumber, setANumber] = useState(0);
+  const begForLife = () => console.log("plz don't leave");
+  useBeforeLeave(begForLife);
   return (
     <div className="App">
-      <div>Hi</div>
-      <button onClick={() => setNumber(number + 1)}>{number}</button>
-      <button onClick={() => setANumber(aNumber + 1)}>{aNumber}</button>
+      <h1>Hello</h1>
     </div>
   );
 };
