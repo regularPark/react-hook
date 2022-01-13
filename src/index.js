@@ -1,28 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 import ReactDOM, { unstable_renderSubtreeIntoContainer } from "react-dom";
-
-const useBeforeLeave = (onBefore) => {
-  if (typeof onBefore !== "function") {
-    return;
-  }
-  const handle = (event) => {
-    const { clientY } = event;
-    if (clientY <= 0) {
-      onBefore();
-    }
-  };
-  useEffect(() => {
-    document.addEventListener("mouseleave", handle);
-    return () => document.removeEventListener("mouseleave", handle);
-  }, []);
-};
+import useAxios from "./useAxios";
 
 const App = () => {
-  const begForLife = () => console.log("plz don't leave");
-  useBeforeLeave(begForLife);
+  const { loading, data, refetch } = useAxios({
+    url: "https://yts.mx/api/v2/list_movies.json"
+  });
+
   return (
     <div className="App">
-      <h1>Hello</h1>
+      <h1>{data && data.status}</h1>
+      <h2>{loading && "Loading"}</h2>
+      <button onClick={refetch}>Refetch</button>
     </div>
   );
 };
